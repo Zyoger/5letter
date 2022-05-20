@@ -5,8 +5,6 @@ print(f"Слов в словаре: {len(words_array)}")
 word = input("Введите слово: ")
 print("Составь маску поиска. (+) - буква на месте, (=) - буква правильная, но не на месте, (-) - такой буквы нет.")
 mask = input("Маска: ")
-print(len(word))
-print(len(mask))
 
 
 def sorted_by_length(array, words_mask):
@@ -19,23 +17,21 @@ def sorted_by_length(array, words_mask):
 
 def alphabetical_sorting(array, words_mask, current_word):
     new_array = []
-    for word_in_array in array:
+    for word_in_array in array:  # перебор слов в массиве
         flag_1 = True
         flag_2 = False
         flag_3 = True
 
-        for i in range(len(word_in_array)):
+        for i in range(len(word_in_array)):  #
             if words_mask[i] == "+":  # буква на месте
-                if current_word[i] != word_in_array[i]:
+                if current_word[i] != word_in_array[i]:  # если буква есть в слове на этом же месте, то
                     flag_1 = False
-            elif words_mask[i] == "=":  # буква правильная, но не на месте
-                for x in range(len(word_in_array)):
-                    if words_mask[x] == "=" or "-":
-                        if x != i:
-                            if current_word[x] == word_in_array[i]:
-                                flag_2 = True
+            elif words_mask[i] == "=":  # буква правильная, но не на месте (не работает)
+                for x in range(len(word_in_array)):  # перебор символов в маске
+                    if words_mask[x] != "+" and x != i and current_word[x] == word_in_array[i]:  # если данная позиция не буква на месте и не стоит там же
+                        flag_2 = True
             elif words_mask[i] == "-":  # такой буквы нет
-                if current_word[i] in word_in_array:
+                if current_word[i] in word_in_array:  # если текущая буква есть в слове
                     flag_3 = False
             else:
                 print("Ошибка составления маски!!!")
@@ -45,6 +41,6 @@ def alphabetical_sorting(array, words_mask, current_word):
     return new_array
 
 
-print(sorted_by_length(words_array, word))
 sort_array = sorted_by_length(words_array, word)
 print(alphabetical_sorting(sort_array, mask, word))
+print(len(alphabetical_sorting(sort_array, mask, word)))
