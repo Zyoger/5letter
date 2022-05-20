@@ -1,73 +1,55 @@
-word_count = 0
-word = input("Введите слово: ")
-print("*" * 60)
-print("||", end=" ")
+with open("base\\words.txt", "r", encoding="utf-8") as file:
+    words_array = [row.strip('\n') for row in file]
+print(f"Слов в словаре: {len(words_array)}")
 
-for x in range(len(word)):
-    print(word[x], f"- {x + 1}-я позиция || ", end="")
-print()
-print("*" * 60)
+word_counter = 0
 
-number_coincidence = int(input("Сколько букв совпало и находятся на своих местах?: "))
-position_coincidence = [0] * number_coincidence
-for i in range(number_coincidence):
-    position_coincidence[i] = int(input(f"Позиция {i + 1}-го совпадения: "))
 
-right_all_letter = input("Введи правильные буквы в слове, но не на месте: ")
+def filter_by_length(array, words_mask):
+    """Фильтрует массив по количеству букв в исходном слове"""
+    new_array = []
+    for i in range(0, len(array)):
+        if len(array[i]) == len(words_mask):
+            new_array.append(array[i])
+    return new_array
 
-wrong_all_letter = input("Введи не правильные буквы: ")
 
-print("*" * 60)
+def filter_by_letters(array, words_mask, current_word):
+    """Фильтрует по маске и буквам в слове"""
+    new_array = []
+    for word_in_array in array:  # перебор слов в массиве
+        flag_1 = True
+        flag_2 = True
+        flag_3 = True
 
-while word_count != 1:
-    with open("base\\words.txt", "r", encoding="utf-8") as file1:
-        word_count = 0
-        word_in_base = 0
+        for i in range(len(word_in_array)):  # перечисление букв в слове
+            if words_mask[i] == "+":  # буква на месте
+                if current_word[i] != word_in_array[i]:  # если буква есть в слове на этом же месте, то
+                    flag_1 = False
+            elif words_mask[i] == "=":  # буква правильная, но не на месте (не работает)
+                for x in range(len(word_in_array)):  # перебор символов в маске
+                    if words_mask[x] != "=" and x != i and current_word[x] == word_in_array[i]:  # если данная позиция не буква на месте и не стоит там же
+                        flag_2 = False
+            elif words_mask[i] == "-":  # такой буквы нет
+                if current_word[i] in word_in_array:  # если текущая буква есть в слове
+                    flag_3 = False
+            else:
+                print("Ошибка составления маски!!!")
 
-        for line in file1:
-            word_in_base += 1
-            if len(line) == len(word) + 1:
-                flag_1 = 0
-                flag_2 = 0
-                flag_3 = 0
-                i = 0
-                while i < number_coincidence:
-                    if str(line[position_coincidence[i] - 1]) == str(word[position_coincidence[i] - 1]):
-                        i += 1
-                        flag_1 += 1
-                    else:
-                        break
-                if len(list(right_all_letter)) > 0:
-                    for n in range(len(list(right_all_letter))):
-                        if list(right_all_letter)[n] in line:
-                            flag_2 += 1
+        if flag_1 and flag_2 and flag_3:
+            new_array.append(word_in_array)
+    return new_array
 
-                if len(list(wrong_all_letter)) > 0:
-                    for p in range(len(list(wrong_all_letter))):
-                        if list(wrong_all_letter)[p] in line:
-                            flag_3 += 1
 
-                if flag_1 == number_coincidence and flag_2 == len(right_all_letter) and flag_3 == 0:
-                    print(line.strip())
-                    word_count += 1
+while word_counter != 1:
+    word = input("Введите слово: ")
+    print("Составь маску. (+) - буква на месте, (=) - буква правильная, но не на месте, (-) - такой буквы нет.")
+    mask = input("Маска: ")
+    if word_counter == 0:
+        sort_array = filter_by_length(words_array, word)
+    sort_array = filter_by_letters(sort_array, mask, word)
+    print(f"Подходящих слов: {len(sort_array)}")
+    word_counter = len(sort_array)
+    print(sort_array)
 
-    print("*" * 60)
-    print(f"Поиск завершен. Слов в словаре: {word_in_base}. Всего подходящих слов: {word_count}")
-    if word_count != 1:
-        word = input("Введите слово из списка: ")
-
-        for x in range(len(word)):
-            print(word[x], f"- {x + 1}-я позиция || ", end="")
-        print()
-        print("*" * 60)
-
-        number_coincidence = int(input("Сколько букв совпало и находятся на своих местах?: "))
-        position_coincidence = [0] * number_coincidence
-        for i in range(number_coincidence):
-            position_coincidence[i] = int(input(f"Позиция {i + 1}-го совпадения: "))
-
-        right_all_letter += input("Добавь правильные буквы в слове, но не на месте: ")
-
-        wrong_all_letter += input("Добавь не правильные буквы: ")
-
-print(f"Слово найдено!")
+print(f"Слово найдено: {sort_array[0]}")
