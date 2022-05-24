@@ -34,7 +34,7 @@ def check_by_letters(hidden_word, word_player):
 
 words_array = filter_by_length(words_array, number_letters)
 word = words_array[random.randint(0, len(words_array))]
-# print(word)
+print(word)
 
 
 while players_word != word:
