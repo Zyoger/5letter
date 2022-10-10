@@ -43,7 +43,7 @@ while players_word != word:
     if players_word in words_array and len(players_word.strip('\n')) == number_letters:
         if players_word == word:
             check = True
-            print(f"Слово угадано, за {attempt} попытки!!!")
+            print(f"Слово '{word}' угадано, за {attempt} попытки!!!")
         else:
             print(check_by_letters(word, players_word))
     else:

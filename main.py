@@ -56,38 +56,6 @@ def filter_include_letter(array, words_mask, current_word):
     return filter_array
 
 
-def filter_by_letters(array, words_mask, current_word):
-    """Фильтрует по маске и буквам в слове"""
-    new_array = []
-    for word_in_array in array:  # перебор слов в массиве
-        flag_1 = True
-        flag_2 = True
-        flag_3 = True
-        flag_4 = True
-
-        for i in range(len(word_in_array)):  # перечисление букв в слове
-            if words_mask[i] == "+":  # буква на месте
-                if current_word[i] != word_in_array[i]:
-                    flag_1 = False
-            elif words_mask[i] == "=":  # буква правильная, но не на месте (не работает)
-                if words_mask[i] == current_word[i]:
-                    flag_4 = False
-
-                for x in range(len(word_in_array)):
-                    if words_mask[x] != "=" and current_word[x] == word_in_array[i]:  # если данная позиция не буква на месте и не стоит там же
-                        flag_2 = False
-
-            elif words_mask[i] == "-":  # такой буквы нет
-                if current_word[i] in word_in_array:
-                    flag_3 = False
-            else:
-                print("Ошибка составления маски!!!")
-
-        if flag_1 and flag_2 and flag_3:
-            new_array.append(word_in_array)
-    return new_array
-
-
 while word_counter != 1:
     word = input("Введите слово: ")
     print("Составь маску. (+) - буква на месте, (=) - буква правильная, но не на месте, (-) - такой буквы нет.")
